@@ -1,16 +1,10 @@
 "use client";
 import { useSession, signIn } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import Link from "next/link";
-
-const UPCOMING = [
-    { tutor: "Karim Mahmoud", initials: "KM", color: "#10b981", subject: "Python", time: "Today · 5:00 PM", status: "Soon" },
-    { tutor: "Sara Ahmed", initials: "SA", color: "#ec4899", subject: "Calculus", time: "Fri · 3:00 PM", status: "Upcoming" },
-    { tutor: "Nour Ali", initials: "NA", color: "#8b5cf6", subject: "Chemistry", time: "Sat · 11:00 AM", status: "Upcoming" },
-];
 
 const PROGRESS = [
     { subject: "English", pct: 88, color: "#8b5cf6" },
@@ -28,12 +22,26 @@ const SAVED = [
 export default function Dashboard() {
     const { data: session, status } = useSession();
     const router = useRouter();
+    const [bookings, setBookings] = useState<any[]>([]);
+    const [bookingsLoading, setBookingsLoading] = useState(true);
 
-    // useEffect(() => {
-    //     if (status === "unauthenticated") {
-    //         signIn();
-    //     }
-    // }, [status, router]);
+    useEffect(() => {
+        if (status === "authenticated") {
+            fetchBookings();
+        }
+    }, [status]);
+
+    const fetchBookings = async () => {
+        try {
+            const res = await fetch("/api/bookings");
+            const data = await res.json();
+            setBookings(Array.isArray(data) ? data : []);
+        } catch (e) {
+            console.error("Failed to fetch bookings", e);
+        } finally {
+            setBookingsLoading(false);
+        }
+    };
 
     if (status === "loading") {
         return (
@@ -65,7 +73,7 @@ export default function Dashboard() {
                             <Link
                                 key={item.label}
                                 href={item.href ?? "#"}
-                                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
                                     item.active
                                         ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                                         : "text-white/40 hover:text-white hover:bg-white/5"
@@ -77,7 +85,7 @@ export default function Dashboard() {
                         ))}
                     </nav>
                     <div className="border-t border-white/5 pt-4">
-                        <button className="flex items-center gap-2 px-3 py-2 text-sm text-white/30 hover:text-white/50 transition-colors w-full">
+                        <button className="flex items-center gap-2 px-3 py-2 text-sm text-white/30 hover:text-white/50 transition-colors w-full text-left">
                             <span className="font-mono">⚙</span> Settings
                         </button>
                     </div>
@@ -88,14 +96,20 @@ export default function Dashboard() {
                     {/* Greeting */}
                     <div className="mb-8 fade-up">
                         <div className="flex items-center gap-4 mb-1">
-                            {session.user?.image && (
+                            {session.user?.image ? (
                                 <Image src={session.user.image} alt="avatar" width={44} height={44} className="rounded-full ring-2 ring-emerald-500/30" />
+                            ) : (
+                                <div className="w-11 h-11 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 font-bold border border-emerald-500/30">
+                                    {firstName[0]}
+                                </div>
                             )}
                             <div>
                                 <h1 className="text-2xl font-bold" style={{ fontFamily: "var(--font-syne)" }}>
                                     Good morning, {firstName}
                                 </h1>
-                                <p className="text-white/40 text-sm">You have {UPCOMING.length} upcoming sessions this week</p>
+                                <p className="text-white/40 text-sm">
+                                    {bookingsLoading ? "Loading your sessions..." : `You have ${bookings.length} upcoming sessions`}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -103,9 +117,9 @@ export default function Dashboard() {
                     {/* Stats cards */}
                     <div className="grid grid-cols-4 gap-4 mb-8 fade-up" style={{ animationDelay: "0.1s" }}>
                         {[
-                            { label: "Total sessions", value: "18" },
-                            { label: "Hours learned", value: "24" },
-                            { label: "Saved tutors", value: "5" },
+                            { label: "Total sessions", value: bookings.length.toString() },
+                            { label: "Hours learned", value: (bookings.length * 1).toString() },
+                            { label: "Saved tutors", value: "3" },
                             { label: "Avg. rating given", value: "4.7" },
                         ].map((stat) => (
                             <div key={stat.label} className="card-hover rounded-2xl bg-[#141720] p-5">
@@ -120,21 +134,30 @@ export default function Dashboard() {
                         {/* Upcoming sessions */}
                         <div className="card-hover rounded-2xl bg-[#141720] p-6 fade-up" style={{ animationDelay: "0.2s" }}>
                             <h2 className="font-bold mb-4" style={{ fontFamily: "var(--font-syne)" }}>Upcoming sessions</h2>
-                            <div className="space-y-3">
-                                {UPCOMING.map((s) => (
-                                    <div key={s.tutor + s.time} className="flex items-center gap-3">
-                                        <div className="w-9 h-9 rounded-lg flex items-center justify-center text-xs font-bold text-black shrink-0" style={{ background: s.color, fontFamily: "var(--font-syne)" }}>
-                                            {s.initials}
-                                        </div>
-                                        <div className="flex-1 min-w-0">
-                                            <div className="text-sm font-medium text-white">{s.tutor}</div>
-                                            <div className="text-xs text-white/40">{s.time} · {s.subject}</div>
-                                        </div>
-                                        <span className={`text-xs px-2.5 py-1 rounded-full ${s.status === "Soon" ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/25" : "bg-white/5 text-white/40 border border-white/10"}`}>
-                      {s.status}
-                    </span>
+                            <div className="space-y-4">
+                                {bookingsLoading ? (
+                                    <div className="py-8 text-center text-white/20 text-sm">Loading sessions...</div>
+                                ) : bookings.length === 0 ? (
+                                    <div className="py-8 text-center">
+                                        <p className="text-white/20 text-sm mb-4">No upcoming sessions</p>
+                                        <Link href="/tutors" className="btn-primary px-4 py-2 rounded-lg text-xs">Find a Tutor</Link>
                                     </div>
-                                ))}
+                                ) : (
+                                    bookings.map((s) => (
+                                        <div key={s.id} className="flex items-center gap-3">
+                                            <div className="w-9 h-9 rounded-lg flex items-center justify-center text-xs font-bold text-black shrink-0" style={{ background: s.tutorColor, fontFamily: "var(--font-syne)" }}>
+                                                {s.tutorInitials}
+                                            </div>
+                                            <div className="flex-1 min-w-0">
+                                                <div className="text-sm font-medium text-white">{s.tutorName}</div>
+                                                <div className="text-xs text-white/40">{s.date} at {s.time} · {s.subject}</div>
+                                            </div>
+                                            <span className={`text-xs px-2.5 py-1 rounded-full ${s.status === "Soon" ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/25" : "bg-white/5 text-white/40 border border-white/10"}`}>
+                                                {s.status}
+                                            </span>
+                                        </div>
+                                    ))
+                                )}
                             </div>
                         </div>
 
