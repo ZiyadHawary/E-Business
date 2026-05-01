@@ -64,6 +64,13 @@ export default function SignInPage() {
                     >
                         {loading ? "Signing in..." : "Sign in"}
                     </button>
+                    
+                    <p className="text-center text-sm text-white/50 pt-4">
+                        Don't have an account?{" "}
+                        <Link href="/auth/signup" className="text-emerald-400 hover:text-emerald-300 transition-colors">
+                            Sign up
+                        </Link>
+                    </p>
                 </div>
             </div>
         </div>

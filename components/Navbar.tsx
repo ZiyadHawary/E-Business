@@ -13,9 +13,9 @@ export default function Navbar() {
             <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                 {/* Logo */}
                 <Link href="/" className="flex items-center gap-2">
-          <span style={{ fontFamily: "var(--font-syne)" }} className="text-xl font-bold tracking-tight">
-            Tutor<span className="text-emerald-400">Link</span>
-          </span>
+                    <span style={{ fontFamily: "var(--font-syne)" }} className="text-xl font-bold tracking-tight">
+                        Tutor<span className="text-emerald-400">Link</span>
+                    </span>
                 </Link>
 
                 {/* Nav links */}
@@ -62,12 +62,12 @@ export default function Navbar() {
                             >
                                 Log in
                             </button>
-                            <button
-                                onClick={() => signIn()}
+                            <Link
+                                href="/auth/signup"
                                 className="btn-primary text-sm px-4 py-2 rounded-lg"
                             >
                                 Sign Up
-                            </button>
+                            </Link>
                         </>
                     )}
                 </div>

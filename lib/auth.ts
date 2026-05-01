@@ -10,11 +10,30 @@ export const authOptions = {
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
-                // Replace this with your real DB lookup + password check
-                if (credentials?.email === "test@test.com" && credentials?.password === "password") {
-                    return { id: "1", name: "Test User", email: "test@test.com" };
+                if (!credentials?.email || !credentials?.password) return null;
+
+                try {
+                    const { signInWithEmailAndPassword } = await import("firebase/auth");
+                    const { auth } = await import("@/lib/firebase");
+
+                    const userCredential = await signInWithEmailAndPassword(
+                        auth,
+                        credentials.email,
+                        credentials.password
+                    );
+
+                    if (userCredential.user) {
+                        return {
+                            id: userCredential.user.uid,
+                            name: userCredential.user.displayName || "User",
+                            email: userCredential.user.email
+                        };
+                    }
+                    return null;
+                } catch (error) {
+                    console.error("Firebase auth error:", error);
+                    return null; // returning null = failed login
                 }
-                return null; // returning null = failed login
             },
         }),
     ],

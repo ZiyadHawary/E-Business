@@ -42,8 +42,9 @@ export default function TutorsContent() {
     const [sortBy, setSortBy] = useState("Top rated");
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
-    const fetchTutors = async() => {
+    const fetchTutors = useCallback(async () => {
         try {
+            setLoading(true);
             const res = await fetch("/api/tutors");
             const data = await res.json();
             setAllTutors(Array.isArray(data) ? data : []);
@@ -52,39 +53,10 @@ export default function TutorsContent() {
         } finally {
             setLoading(false);
         }
-    }
-
-    // const fetchTutors = useCallback(async () => {
-    //     try {
-    //         const res = await fetch("/api/tutors");
-    //         const data = await res.json();
-    //         setAllTutors(Array.isArray(data) ? data : []);
-    //     } catch {
-    //         setAllTutors([]);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // }, []);
+    }, []);
 
     useEffect(() => {
-        const cancelled = false;
-        const load = async() => {
-            try {
-                const res = await fetch("/api/tutors");
-                const data = await res.json();
-                if (!cancelled) {
-                    setAllTutors(Array.isArray(data) ? data : []);
-                }
-            } catch {
-                if (!cancelled) {
-                    setAllTutors([]);
-                }
-            } finally {
-                if (!cancelled) {
-                    setLoading(false);
-                }
-            }
-        }
+        fetchTutors();
     }, [fetchTutors]);
 
     const seedDb = async () => {
@@ -111,6 +83,7 @@ export default function TutorsContent() {
             if (sortBy === "Most reviews") return b.reviewCount - a.reviewCount;
             return 0;
         });
+
     console.log(filtered);
     return (
         <div className="min-h-screen grid-bg">
@@ -169,7 +142,7 @@ export default function TutorsContent() {
                                 <div>
                                     <h3 className="text-xs font-bold text-white/40 tracking-widest uppercase mb-3">Min. Rating</h3>
                                     <div className="space-y-2">
-                                        {[{label:"Any",val:0},{label:"4+ stars",val:4},{label:"4.5+ stars",val:4.5}].map(({label,val}) => (
+                                        {[{ label: "Any", val: 0 }, { label: "4+ stars", val: 4 }, { label: "4.5+ stars", val: 4.5 }].map(({ label, val }) => (
                                             <label key={label} className="flex items-center gap-2.5 cursor-pointer group">
                                                 <input type="radio" name="rating" checked={minRating === val} onChange={() => setMinRating(val)} className="w-4 h-4" />
                                                 <span className="text-sm text-white/60 group-hover:text-white transition-colors">{label}</span>
@@ -217,9 +190,9 @@ export default function TutorsContent() {
                             <div className="flex items-center gap-2 flex-wrap">
                                 {subjects.map((s) => (
                                     <span key={s} className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-400">
-                    {s}
+                                        {s}
                                         <button onClick={() => setSubjects(subjects.filter((x) => x !== s))}>×</button>
-                  </span>
+                                    </span>
                                 ))}
                             </div>
                             <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-[#141720] border border-white/10 text-white/70 text-sm rounded-lg px-3 py-2 outline-none">
@@ -228,7 +201,7 @@ export default function TutorsContent() {
                         </div>
 
                         {loading ? (
-                            <div className="grid gap-4">{[1,2,3].map((i) => <div key={i} className="skeleton rounded-2xl h-36" />)}</div>
+                            <div className="grid gap-4">{[1, 2, 3].map((i) => <div key={i} className="skeleton rounded-2xl h-36" />)}</div>
                         ) : filtered.length === 0 ? (
                             <div className="text-center py-24 text-white/30">
                                 <div className="text-5xl mb-4">🔍</div>
