@@ -5,74 +5,201 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function SignInPage() {
-    const router = useRouter();
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-    const handleSubmit = async () => {
-        setLoading(true);
-        setError("");
-        const res = await signIn("credentials", {
-            email,
-            password,
-            redirect: false,
-        });
-        setLoading(false);
-        if (res?.error) {
-            setError("Invalid email or password.");
-        } else {
-            router.push("/dashboard");
-        }
-    };
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError("");
+    const res = await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+    setLoading(false);
+    if (res?.error) {
+      setError("Invalid email or password.");
+    } else {
+      router.push("/dashboard");
+    }
+  };
 
-    return (
-        <div className="min-h-screen grid-bg flex items-center justify-center px-4">
-            <div className="w-full max-w-md fade-up">
-                <div className="text-center mb-10">
-                    <Link href="/" className="inline-block text-2xl font-bold" style={{ fontFamily: "var(--font-syne)" }}>
-                        Tutor<span className="text-emerald-400">Link</span>
-                    </Link>
-                    <p className="text-white/40 text-sm mt-2">Sign in to continue learning</p>
-                </div>
+  return (
+    <div
+      className="min-h-screen"
+      style={{
+        backgroundImage:
+          "linear-gradient(rgba(255, 253, 231, 0.78), rgba(178, 237, 232, 0.78)), url('/images/login.jpeg')",
+        backgroundPosition: "center 100%",
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        fontFamily: '"DM Sans", sans-serif',
+      }}
+    >
+      <nav className="flex items-center px-8 py-5">
+        <Link href="/" className="flex items-center gap-2">
+          <svg
+            className="h-7 w-7 text-teal-500"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <rect x="3" y="3" width="7" height="9" rx="1" />
+            <rect x="14" y="3" width="7" height="9" rx="1" />
+            <rect x="3" y="15" width="7" height="6" rx="1" />
+            <rect x="14" y="15" width="7" height="6" rx="1" />
+          </svg>
+          <span className="text-xl font-bold">TutorLink</span>
+        </Link>
+      </nav>
 
-                <div className="bg-[#141720] rounded-2xl border border-white/8 p-8 space-y-4">
-                    <h1 className="text-2xl font-bold text-center mb-6" style={{ fontFamily: "var(--font-syne)" }}>Welcome back</h1>
-
-                    {error && <p className="text-sm text-red-400 text-center">{error}</p>}
-
-                    <input
-                        type="email"
-                        placeholder="Email address"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder-white/30 outline-none focus:border-emerald-500/50 transition-colors"
-                    />
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                        className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder-white/30 outline-none focus:border-emerald-500/50 transition-colors"
-                    />
-                    <button
-                        onClick={handleSubmit}
-                        disabled={loading}
-                        className="btn-primary w-full py-3 rounded-xl text-sm disabled:opacity-50"
-                    >
-                        {loading ? "Signing in..." : "Sign in"}
-                    </button>
-                    
-                    <p className="text-center text-sm text-white/50 pt-4">
-                        Don't have an account?{" "}
-                        <Link href="/auth/signup" className="text-emerald-400 hover:text-emerald-300 transition-colors">
-                            Sign up
-                        </Link>
-                    </p>
-                </div>
-            </div>
+      <main className="mx-auto flex max-w-6xl items-center justify-between gap-12 px-8 py-12">
+        <div className="max-w-md flex-1">
+          <h2 className="mb-3 text-3xl font-extrabold text-gray-900">
+            Welcome to TutorLink!
+          </h2>
+          <p className="mb-10 text-base text-gray-600">
+            Connect with certified tutors to meet all your personalized learning
+            needs!
+          </p>
+          <div
+            className="h-56 w-full max-w-sm rounded-3xl bg-white/70"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(255,255,255,0.55), rgba(255,255,255,0.3))",
+            }}
+            aria-label="Learning illustration placeholder panel"
+            role="img"
+          />
         </div>
-    );
+
+        <div className="w-96 rounded-3xl border border-white/80 bg-white/60 p-10 shadow-xl backdrop-blur-md">
+          <h1 className="mb-8 text-center text-2xl font-extrabold leading-snug text-gray-900">
+            Learning Without Limits.
+            <br />
+            <span className="text-gray-800">Join us now!</span>
+          </h1>
+
+          <div className="space-y-4">
+            {error && <p className="text-center text-sm text-red-500">{error}</p>}
+
+            <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+              <input
+                className="flex-1 bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none"
+                placeholder="Email Address"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <svg
+                className="h-5 w-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+              >
+                <path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
+              </svg>
+            </div>
+
+            <div>
+              <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-3">
+                <input
+                  className="flex-1 bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none"
+                  placeholder="Password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                />
+                <svg
+                  className="h-5 w-5 cursor-pointer text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                </svg>
+              </div>
+              <a
+                href="#"
+                className="mt-1 block text-xs text-gray-500 transition-colors hover:text-teal-500"
+              >
+                Forgot Password?
+              </a>
+            </div>
+
+            <button
+              className="w-full rounded-xl bg-teal-500 py-3 font-semibold text-white shadow-md transition-colors hover:bg-teal-600 disabled:opacity-60"
+              onClick={handleSubmit}
+              disabled={loading}
+            >
+              {loading ? "Signing in..." : "Login"}
+            </button>
+
+            <p className="text-center text-sm text-gray-500">
+              Don&apos;t Have an Account?{" "}
+              <Link
+                href="/auth/signup"
+                className="font-medium text-teal-500 hover:underline"
+              >
+                Sign Up
+              </Link>
+            </p>
+
+            <div className="mt-2 flex justify-center gap-3">
+              <button
+                type="button"
+                className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-teal-500 transition-colors hover:bg-teal-100"
+                aria-label="Continue with Facebook"
+              >
+                <svg className="h-5 w-5 text-teal-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-teal-500 transition-colors hover:bg-teal-100"
+                aria-label="Continue with Google"
+              >
+                <svg className="h-5 w-5 text-teal-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-teal-500 transition-colors hover:bg-teal-100"
+                aria-label="Continue with LinkedIn"
+              >
+                <svg className="h-5 w-5 text-teal-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                </svg>
+              </button>
+            </div>
+
+            <button
+              type="button"
+              className="mt-2 flex w-full items-center justify-between rounded-xl bg-teal-500 px-5 py-3 font-semibold text-white transition-colors hover:bg-teal-600"
+            >
+              <span>Student</span>
+              <svg
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                viewBox="0 0 24 24"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
 }

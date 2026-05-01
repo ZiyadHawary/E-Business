@@ -1,87 +1,143 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import Navbar from "@/components/Navbar";
 
-const SUBJECTS = ["Mathematics", "Physics", "Programming", "Chemistry", "English", "Arabic"];
+const SUBJECTS = ["Mathematics", "English", "Science", "Programming"];
 
 export default function Home() {
   const router = useRouter();
-  const [subject, setSubject] = useState("");
+  const [query, setQuery] = useState("");
 
   const handleSearch = () => {
-    const params = subject ? `?subject=${encodeURIComponent(subject)}` : "";
+    const params = query ? `?subject=${encodeURIComponent(query)}` : "";
     router.push(`/tutors${params}`);
   };
 
   return (
-      <div className="min-h-screen grid-bg relative overflow-hidden">
-        <Navbar />
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-emerald-500/5 blur-[100px] pointer-events-none" />
-
-        <section className="pt-40 pb-24 px-6 text-center relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 mb-8 fade-up">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="text-xs font-medium text-emerald-400 tracking-wider uppercase">Live 1-on-1 sessions</span>
+    <div
+      className="min-h-screen"
+      style={{
+        background: "linear-gradient(135deg, #fffde7 0%, #e0f7f4 50%, #b2ede8 100%)",
+        fontFamily: '"DM Sans", sans-serif',
+      }}
+    >
+      <nav className="flex items-center justify-between px-8 py-5">
+        <div className="flex items-center gap-2">
+          <svg className="h-7 w-7 text-teal-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="9" rx="1" />
+            <rect x="14" y="3" width="7" height="9" rx="1" />
+            <rect x="3" y="15" width="7" height="6" rx="1" />
+            <rect x="14" y="15" width="7" height="6" rx="1" />
+          </svg>
+          <span className="text-xl font-bold">TutorLink</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="relative h-10 w-10 overflow-hidden rounded-full bg-amber-200 ring-2 ring-amber-400">
+            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-amber-300 to-orange-400 text-sm font-bold text-white">
+              Y
+            </div>
           </div>
+          <button className="relative" type="button" aria-label="Notifications">
+            <svg className="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+              <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+              3
+            </span>
+          </button>
+        </div>
+      </nav>
 
-          <h1 className="fade-up text-5xl md:text-7xl font-extrabold tracking-tight leading-none mb-6" style={{fontFamily:"var(--font-syne)",animationDelay:"0.1s"}}>
-            Find your perfect tutor,<br /><span className="text-emerald-400">learn faster</span>
+      <section className="mx-auto flex max-w-7xl items-center justify-between px-8 pb-16 pt-8">
+        <div className="max-w-xl">
+          <h1 className="text-6xl font-extrabold uppercase leading-tight tracking-tight text-gray-900">
+            Learning
+            <br />
+            Without <span className="text-teal-500">Limits.</span>
+            <br />
+            Find Your
+            <br />
+            Tutor.
           </h1>
-
-          <p className="fade-up text-lg text-white/50 max-w-xl mx-auto mb-12" style={{animationDelay:"0.2s"}}>
-            Connect with verified, expert tutors for live video sessions tailored to your goals.
+          <div className="mt-8 flex max-w-md items-center rounded-full border border-gray-200 bg-white/70 px-5 py-3 shadow-sm backdrop-blur">
+            <input
+              className="flex-1 bg-transparent text-sm text-gray-500 placeholder-gray-400 outline-none"
+              placeholder="Search for Tutors, Subjects, Skills..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            />
+            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
+          </div>
+          <p className="mt-6 max-w-sm text-lg font-medium leading-relaxed text-gray-700">
+            TutorLink connects students with top-rated tutors for personalized learning.
           </p>
-
-          <div className="fade-up max-w-lg mx-auto flex items-center gap-3 bg-[#141720] border border-white/10 rounded-2xl p-2 shadow-2xl" style={{animationDelay:"0.3s"}}>
-            <select value={subject} onChange={(e) => setSubject(e.target.value)} className="flex-1 bg-transparent text-white/70 text-sm px-3 py-2.5 outline-none cursor-pointer">
-              <option value="">All Subjects</option>
-              {SUBJECTS.map((s) => <option key={s} value={s} className="bg-[#1c2030]">{s}</option>)}
-            </select>
-            <button onClick={handleSearch} className="btn-primary px-6 py-2.5 rounded-xl text-sm flex items-center gap-2">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-              Search
-            </button>
-          </div>
-
-          <div className="fade-up flex flex-wrap justify-center gap-2 mt-6" style={{animationDelay:"0.4s"}}>
+          <button
+            className="mt-6 rounded-full bg-teal-500 px-8 py-3 font-semibold text-white shadow-md transition-colors hover:bg-teal-600"
+            onClick={() => router.push("/auth/signin")}
+            type="button"
+          >
+            Get Started
+          </button>
+          <div className="mt-4 flex flex-wrap gap-2">
             {SUBJECTS.map((s) => (
-                <button key={s} onClick={() => router.push(`/tutors?subject=${encodeURIComponent(s)}`)}
-                        className="px-4 py-1.5 rounded-full text-sm text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/10 transition-colors">
-                  {s}
-                </button>
+              <button
+                key={s}
+                className="rounded-full border border-teal-500/30 bg-white/50 px-3 py-1.5 text-xs text-gray-700 transition-colors hover:bg-white/80"
+                onClick={() => router.push(`/tutors?subject=${encodeURIComponent(s)}`)}
+                type="button"
+              >
+                {s}
+              </button>
             ))}
           </div>
-        </section>
+        </div>
 
-        <section className="max-w-4xl mx-auto px-6 pb-24">
-          <div className="grid grid-cols-3 gap-4">
-            {[{value:"500+",label:"Expert Tutors"},{value:"12k+",label:"Sessions Completed"},{value:"4.8★",label:"Average Rating"}].map((stat) => (
-                <div key={stat.label} className="card-hover rounded-2xl bg-[#141720] p-6 text-center">
-                  <div className="text-3xl font-bold text-emerald-400 mb-1" style={{fontFamily:"var(--font-syne)"}}>{stat.value}</div>
-                  <div className="text-sm text-white/50">{stat.label}</div>
-                </div>
-            ))}
-          </div>
-        </section>
+        <div className="hidden flex-1 items-center justify-end pl-8 lg:flex">
+          <div
+            className="h-[430px] w-full max-w-lg rounded-3xl"
+            style={{
+              backgroundImage: "url('/images/other.jpeg')",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
+              backgroundSize: "cover",
+            }}
+            role="img"
+            aria-label="TutorLink learning illustration"
+          />
+        </div>
+      </section>
 
-        <section className="max-w-5xl mx-auto px-6 pb-32">
-          <h2 className="text-3xl font-bold text-center mb-12" style={{fontFamily:"var(--font-syne)"}}>How it <span className="text-emerald-400">works</span></h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {step:"01",title:"Search & Filter",desc:"Find the perfect tutor by subject, price, rating, and availability.",icon:"🔍"},
-              {step:"02",title:"Book a Session",desc:"Pick a time slot that works for you. Real-time availability shown.",icon:"📅"},
-              {step:"03",title:"Learn Live",desc:"HD video call with interactive whiteboard and file sharing.",icon:"🎓"},
-            ].map((item) => (
-                <div key={item.step} className="card-hover rounded-2xl bg-[#141720] p-6">
-                  <div className="text-4xl mb-4">{item.icon}</div>
-                  <div className="text-xs font-bold text-emerald-500 mb-2 tracking-widest">{item.step}</div>
-                  <h3 className="text-lg font-bold mb-2" style={{fontFamily:"var(--font-syne)"}}>{item.title}</h3>
-                  <p className="text-sm text-white/50 leading-relaxed">{item.desc}</p>
-                </div>
-            ))}
+      <section className="mx-auto max-w-7xl px-8 pb-20">
+        <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <div className="rounded-2xl border border-white/80 bg-white/70 p-6 shadow-sm transition-shadow hover:shadow-md">
+            <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/10">
+              <svg className="h-5 w-5 text-teal-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+            </div>
+            <h3 className="mb-2 text-base font-bold text-gray-900">Diverse Subjects</h3>
+            <p className="text-sm leading-relaxed text-gray-500">Subjects ranging from advanced University courses to Elementary School education.</p>
           </div>
-        </section>
-      </div>
+
+          <div className="rounded-2xl border border-white/80 bg-white/70 p-6 shadow-sm transition-shadow hover:shadow-md">
+            <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/10">
+              <svg className="h-5 w-5 text-teal-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
+            </div>
+            <h3 className="mb-2 text-base font-bold text-gray-900">Certified Tutors</h3>
+            <p className="text-sm leading-relaxed text-gray-500">TutorLink only hosts tutors with the proper certifications for their respective subjects.</p>
+          </div>
+
+          <div className="rounded-2xl border border-white/80 bg-white/70 p-6 shadow-sm transition-shadow hover:shadow-md">
+            <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/10">
+              <svg className="h-5 w-5 text-teal-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            </div>
+            <h3 className="mb-2 text-base font-bold text-gray-900">Flexible Learning</h3>
+            <p className="text-sm leading-relaxed text-gray-500">Approach learning from a new more flexible and personalized perspective.</p>
+          </div>
+        </div>
+      </section>
+    </div>
   );
 }
