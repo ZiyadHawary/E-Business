@@ -13,7 +13,12 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("overview");
 
   const notifications = useMemo(
-    () => [],
+    () => [
+      "New message from Karim Mahmoud about your Programming session.",
+      "Your session with Rania Adel has been confirmed for Tomorrow.",
+      "Check out our new 'Advanced Algorithms' course now available!",
+      "Platform Update: We've improved the search filters to help you find tutors faster.",
+    ],
     [],
   );
 

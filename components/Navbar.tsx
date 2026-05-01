@@ -48,7 +48,7 @@ export default function Navbar() {
                                     )}
                                     <span className="text-sm text-gray-700 max-w-30 truncate font-medium">{session.user?.name}</span>
                                 </Link>
-                                <button 
+                                <button
                                     onClick={() => setDropdownOpen(!dropdownOpen)}
                                     className="p-1 hover:bg-black/5 rounded-full transition-colors"
                                 >
@@ -63,7 +63,7 @@ export default function Navbar() {
                                     <button onClick={() => signOut()} className="w-full text-left px-4 py-2.5 text-sm text-red-500 hover:text-red-600 hover:bg-black/5 transition-colors">Sign out</button>
                                 </div>
                             )}
-                        </Link>
+                        </div>
                     ) : (
                         <>
                             <button

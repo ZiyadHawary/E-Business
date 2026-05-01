@@ -12,6 +12,13 @@ export default function Home() {
   const [query, setQuery] = useState("");
 
   const userInitial = session?.user?.name?.[0]?.toUpperCase() ?? "U";
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  
+  const dummyNotifications = [
+    "Welcome to TutorLink! Start by finding a tutor.",
+    "Special Offer: Get 20% off your first session with code FIRST20.",
+    "New tutors joined today in the Programming section.",
+  ];
 
   const handleSearch = () => {
     const params = query ? `?subject=${encodeURIComponent(query)}` : "";
@@ -38,16 +45,34 @@ export default function Home() {
               {userInitial}
             </div>
           </Link>
-          <button className="relative" type="button" aria-label="Notifications">
+          <button 
+            className="relative" 
+            type="button" 
+            aria-label="Notifications"
+            onClick={() => setNotificationsOpen(!notificationsOpen)}
+          >
             <svg className="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
               <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
             </svg>
             <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-              3
+              {dummyNotifications.length}
             </span>
           </button>
         </div>
       </nav>
+
+      {notificationsOpen && (
+        <div className="fixed right-8 top-20 z-50 w-72 rounded-2xl border border-white/80 bg-white/80 p-4 shadow-xl backdrop-blur-md fade-up">
+          <p className="mb-3 text-sm font-bold text-gray-900">Notifications</p>
+          <div className="space-y-3">
+            {dummyNotifications.map((notif, idx) => (
+              <div key={idx} className="rounded-xl bg-white/50 p-3 text-xs text-gray-700 shadow-sm border border-white/50">
+                {notif}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <section className="mx-auto flex max-w-7xl items-center justify-between px-8 pb-16 pt-8">
         <div className="max-w-xl">
@@ -78,7 +103,13 @@ export default function Home() {
           </p>
           <button
             className="mt-6 rounded-full bg-teal-500 px-8 py-3 font-semibold text-white shadow-md transition-colors hover:bg-teal-600"
-            onClick={() => router.push("/auth/signin")}
+            onClick={() => {
+              if (session) {
+                router.push("/dashboard");
+              }
+              else
+                router.push("/auth/signin")
+            }}
             type="button"
           >
             Get Started

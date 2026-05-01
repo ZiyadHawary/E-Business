@@ -89,6 +89,13 @@ export default function TutorsContent() {
   const [onlyVerified, setOnlyVerified] = useState(false);
   const [fourPlus, setFourPlus] = useState(true);
   const [threePlus, setThreePlus] = useState(false);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  
+  const dummyNotifications = [
+    "You have a new tutor recommendation based on your interest in Programming.",
+    "Reminder: Your session with Annette Black starts in 2 hours.",
+    "A new verified tutor for 'Mandarin' has just joined!",
+  ];
 
   const fetchTutors = useCallback(async () => {
     try {
@@ -260,16 +267,33 @@ export default function TutorsContent() {
               <Link href="/dashboard" className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-orange-400 text-sm font-bold text-white transition-transform hover:scale-110 active:scale-95 shadow-md">
                 {userInitial}
               </Link>
-              <button className="relative" type="button">
+              <button 
+                className="relative" 
+                type="button"
+                onClick={() => setNotificationsOpen(!notificationsOpen)}
+              >
                 <svg className="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
                   <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                 </svg>
                 <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                  3
+                  {dummyNotifications.length}
                 </span>
               </button>
             </div>
           </div>
+
+          {notificationsOpen && (
+            <div className="absolute right-8 top-20 z-50 w-72 rounded-2xl border border-white/80 bg-white/80 p-4 shadow-xl backdrop-blur-md fade-up">
+              <p className="mb-3 text-sm font-bold text-gray-900">Notifications</p>
+              <div className="space-y-3">
+                {dummyNotifications.map((notif, idx) => (
+                  <div key={idx} className="rounded-xl bg-white/50 p-3 text-xs text-gray-700 shadow-sm border border-white/50">
+                    {notif}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="mb-3 text-sm text-gray-600">
             {loading ? "Loading tutors..." : `${filteredTutors.length} tutor${filteredTutors.length !== 1 ? "s" : ""} found`}
