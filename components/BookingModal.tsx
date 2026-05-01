@@ -81,27 +81,27 @@ export default function BookingModal({ tutor, isOpen, onClose, onSuccess }: Book
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div 
                 onClick={onClose}
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
+                className="absolute inset-0 bg-black/20 backdrop-blur-[2px] transition-opacity"
             />
             
-            <div className="relative w-full max-w-lg bg-[#141720] border border-white/10 rounded-3xl shadow-2xl overflow-hidden scale-up">
+            <div className="relative w-full max-w-lg bg-white/95 border border-white/80 rounded-3xl shadow-2xl overflow-hidden scale-up backdrop-blur-xl">
                 {/* Header */}
-                <div className="p-6 border-b border-white/5 flex items-center gap-4">
+                <div className="p-6 border-b border-black/5 flex items-center gap-4">
                     <div 
-                        className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold text-black"
-                        style={{ background: tutor.color, fontFamily: "var(--font-syne)" }}
+                        className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold text-white shadow-inner"
+                        style={{ background: tutor.color || '#10b981' }}
                     >
                         {tutor.initials}
                     </div>
                     <div>
-                        <h2 className="text-xl font-bold text-white" style={{ fontFamily: "var(--font-syne)" }}>
+                        <h2 className="text-xl font-bold text-gray-900">
                             Book {tutor.name}
                         </h2>
-                        <p className="text-white/40 text-sm">Select your preferred session time</p>
+                        <p className="text-gray-500 text-sm">Select your preferred session time</p>
                     </div>
                     <button 
                         onClick={onClose}
-                        className="ml-auto w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/5 text-white/40 transition-colors"
+                        className="ml-auto w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 text-gray-400 transition-colors"
                     >
                         ✕
                     </button>
@@ -110,16 +110,16 @@ export default function BookingModal({ tutor, isOpen, onClose, onSuccess }: Book
                 <div className="p-6">
                     {/* Subject Selection */}
                     <div className="mb-6">
-                        <label className="text-xs font-medium text-white/40 uppercase tracking-wider mb-2 block">Subject</label>
+                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 block">Subject</label>
                         <div className="flex flex-wrap gap-2">
-                            {tutor.subjects.map(s => (
+                            {tutor.subjects?.map(s => (
                                 <button
                                     key={s}
                                     onClick={() => setSelectedSubject(s)}
-                                    className={`px-3 py-1.5 rounded-lg text-sm transition-all ${
+                                    className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
                                         selectedSubject === s 
-                                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
-                                            : "bg-white/5 text-white/60 border border-transparent hover:border-white/10"
+                                            ? "bg-teal-500 text-white shadow-md shadow-teal-500/20" 
+                                            : "bg-gray-50 text-gray-600 border border-gray-100 hover:border-gray-200"
                                     }`}
                                 >
                                     {s}
@@ -130,21 +130,21 @@ export default function BookingModal({ tutor, isOpen, onClose, onSuccess }: Book
 
                     {/* Date Selection */}
                     <div className="mb-6">
-                        <label className="text-xs font-medium text-white/40 uppercase tracking-wider mb-2 block">Select Date</label>
-                        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 block">Select Date</label>
+                        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
                             {days.map(d => (
                                 <button
                                     key={d.full}
                                     onClick={() => setSelectedDate(d.full)}
-                                    className={`flex flex-col items-center min-w-[64px] p-3 rounded-2xl transition-all ${
+                                    className={`flex flex-col items-center min-w-[70px] p-3 rounded-2xl transition-all ${
                                         selectedDate === d.full 
-                                            ? "bg-emerald-500 text-black font-bold" 
-                                            : "bg-white/5 text-white/60 hover:bg-white/10"
+                                            ? "bg-amber-400 text-white font-bold shadow-md shadow-amber-400/20" 
+                                            : "bg-gray-50 text-gray-500 hover:bg-gray-100 border border-gray-100"
                                     }`}
                                 >
-                                    <span className="text-[10px] uppercase opacity-60 mb-1">{d.day}</span>
-                                    <span className="text-lg leading-none mb-1">{d.date}</span>
-                                    <span className="text-[10px] opacity-60">{d.month}</span>
+                                    <span className="text-[10px] uppercase font-bold opacity-60 mb-1">{d.day}</span>
+                                    <span className="text-xl leading-none mb-1">{d.date}</span>
+                                    <span className="text-[10px] uppercase font-bold opacity-60">{d.month}</span>
                                 </button>
                             ))}
                         </div>
@@ -152,16 +152,16 @@ export default function BookingModal({ tutor, isOpen, onClose, onSuccess }: Book
 
                     {/* Time Selection */}
                     <div className="mb-8">
-                        <label className="text-xs font-medium text-white/40 uppercase tracking-wider mb-2 block">Select Time</label>
+                        <label className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 block">Select Time</label>
                         <div className="grid grid-cols-4 gap-2">
                             {TIMES.map(t => (
                                 <button
                                     key={t}
                                     onClick={() => setSelectedTime(t)}
-                                    className={`py-2 rounded-xl text-xs transition-all ${
+                                    className={`py-2.5 rounded-xl text-xs font-semibold transition-all ${
                                         selectedTime === t 
-                                            ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" 
-                                            : "bg-white/5 text-white/60 border border-transparent hover:border-white/10"
+                                            ? "bg-teal-500/10 text-teal-600 border border-teal-500/20" 
+                                            : "bg-gray-50 text-gray-500 border border-transparent hover:border-gray-200"
                                     }`}
                                 >
                                     {t}
@@ -174,11 +174,11 @@ export default function BookingModal({ tutor, isOpen, onClose, onSuccess }: Book
                     <button
                         disabled={!selectedDate || !selectedTime || loading}
                         onClick={handleBooking}
-                        className="w-full btn-primary py-4 rounded-2xl font-bold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full bg-teal-500 hover:bg-teal-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-teal-500/25 transition-all active:scale-[0.98]"
                     >
                         {loading ? (
                             <>
-                                <div className="w-4 h-4 border-2 border-black/20 border-t-black rounded-full animate-spin" />
+                                <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
                                 Confirming...
                             </>
                         ) : "Confirm Booking"}

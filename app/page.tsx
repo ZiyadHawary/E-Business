@@ -1,12 +1,17 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const SUBJECTS = ["Mathematics", "English", "Science", "Programming"];
 
 export default function Home() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [query, setQuery] = useState("");
+
+  const userInitial = session?.user?.name?.[0]?.toUpperCase() ?? "U";
 
   const handleSearch = () => {
     const params = query ? `?subject=${encodeURIComponent(query)}` : "";
@@ -18,25 +23,21 @@ export default function Home() {
       className="min-h-screen"
       style={{
         background: "linear-gradient(135deg, #fffde7 0%, #e0f7f4 50%, #b2ede8 100%)",
-        fontFamily: '"DM Sans", sans-serif',
       }}
     >
       <nav className="flex items-center justify-between px-8 py-5">
         <div className="flex items-center gap-2">
           <svg className="h-7 w-7 text-teal-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-            <rect x="3" y="3" width="7" height="9" rx="1" />
-            <rect x="14" y="3" width="7" height="9" rx="1" />
-            <rect x="3" y="15" width="7" height="6" rx="1" />
-            <rect x="14" y="15" width="7" height="6" rx="1" />
+            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
-          <span className="text-xl font-bold">TutorLink</span>
+          <span className="text-xl font-bold text-black">TutorLink</span>
         </div>
         <div className="flex items-center gap-4">
-          <div className="relative h-10 w-10 overflow-hidden rounded-full bg-amber-200 ring-2 ring-amber-400">
+          <Link href="/dashboard" className="relative h-10 w-10 overflow-hidden rounded-full bg-amber-200 ring-2 ring-amber-400 transition-transform hover:scale-110 active:scale-95 shadow-md">
             <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-amber-300 to-orange-400 text-sm font-bold text-white">
-              Y
+              {userInitial}
             </div>
-          </div>
+          </Link>
           <button className="relative" type="button" aria-label="Notifications">
             <svg className="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
               <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -98,9 +99,9 @@ export default function Home() {
 
         <div className="hidden flex-1 items-center justify-end pl-8 lg:flex">
           <div
-            className="h-[430px] w-full max-w-lg rounded-3xl"
+            className="h-[665px] w-full max-w-lg rounded-3xl"
             style={{
-              backgroundImage: "url('/images/other.jpeg')",
+              backgroundImage: "url('/images/landing page.png')",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
               backgroundSize: "cover",

@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import TutorCard from "@/components/TutorCard";
 
 type Tutor = {
   id: string;
@@ -22,11 +23,54 @@ type Tutor = {
 
 const SUBJECTS = ["Mathematics", "English", "Science", "Programming"];
 const GRADES = ["Elementary", "Middle School", "High School", "University"];
+const LANGUAGES = ["English", "Mandarin", "Spanish", "French", "Arabic", "German"];
 
 const FALLBACK_TUTORS = [
-  { name: "Annette Black", initials: "A", subject: "English", bio: "Beginner level English tutoring.", rating: 4.9, reviews: 172, rate: 300, level: "Level 2 Tutor", banner: "from-blue-500 to-indigo-600", bannerText: "ENGLISH" },
-  { name: "@duozhuamiao", initials: "D", subject: "Programming", bio: "Learn advanced programming techniques.", rating: 5.0, reviews: 54, rate: 300, level: "Top Rated Tutor", banner: "from-sky-400 to-blue-600", bannerText: "PROGRAMMING" },
-  { name: "Marvin McKinney", initials: "M", subject: "English", bio: "Advanced topics in English Literature.", rating: 5.0, reviews: 447, rate: 300, level: "Top Rated Tutor", banner: "from-red-700 to-red-900", bannerText: "English Literature" },
+  { 
+    id: "f1",
+    name: "Annette Black", 
+    initials: "A", 
+    bio: "Beginner level English tutoring.", 
+    rating: 4.9, 
+    reviewCount: 172, 
+    hourlyRate: 300, 
+    subjects: ["English"], 
+    tags: ["Friendly", "Experienced"], 
+    language: ["English"], 
+    availability: ["Today", "Tomorrow"], 
+    verified: true, 
+    color: "#fbbf24" 
+  },
+  { 
+    id: "f2",
+    name: "@duozhuamiao", 
+    initials: "D", 
+    bio: "Learn advanced programming techniques.", 
+    rating: 5.0, 
+    reviewCount: 54, 
+    hourlyRate: 300, 
+    subjects: ["Programming"], 
+    tags: ["Pro", "Clean Code"], 
+    language: ["English", "Mandarin"], 
+    availability: ["Tomorrow"], 
+    verified: true, 
+    color: "#10b981" 
+  },
+  { 
+    id: "f3",
+    name: "Marvin McKinney", 
+    initials: "M", 
+    bio: "Advanced topics in English Literature.", 
+    rating: 5.0, 
+    reviewCount: 447, 
+    hourlyRate: 300, 
+    subjects: ["English"], 
+    tags: ["Expert", "Academic"], 
+    language: ["English"], 
+    availability: ["Today"], 
+    verified: false, 
+    color: "#ef4444" 
+  },
 ];
 
 export default function TutorsContent() {
@@ -41,6 +85,8 @@ export default function TutorsContent() {
   const [maxRate, setMaxRate] = useState(1000);
   const [minRate, setMinRate] = useState(0);
   const [grade, setGrade] = useState("Select a Grade");
+  const [selectedLanguage, setSelectedLanguage] = useState("All Languages");
+  const [onlyVerified, setOnlyVerified] = useState(false);
   const [fourPlus, setFourPlus] = useState(true);
   const [threePlus, setThreePlus] = useState(false);
 
@@ -69,53 +115,37 @@ export default function TutorsContent() {
     setSeeding(false);
   };
 
-  const tutors = useMemo(() => {
-    if (allTutors.length === 0) return FALLBACK_TUTORS;
-    return allTutors.map((t) => ({
-      name: t.name,
-      initials: t.initials,
-      subject: t.subjects[0] ?? "General",
-      bio: t.bio,
-      rating: t.rating,
-      reviews: t.reviewCount,
-      rate: t.hourlyRate,
-      level: t.verified ? "Top Rated Tutor" : "Level 2 Tutor",
-      banner: t.subjects[0]?.toLowerCase().includes("program")
-        ? "from-sky-400 to-blue-600"
-        : t.subjects[0]?.toLowerCase().includes("english")
-          ? "from-blue-500 to-indigo-600"
-          : "from-red-700 to-red-900",
-      bannerText: t.subjects[0] ?? "TUTOR",
-    }));
-  }, [allTutors]);
+  const filteredTutors = useMemo(() => {
+    const list = allTutors.length > 0 ? allTutors : FALLBACK_TUTORS;
+    return list.filter((t) => {
+      const mainSubject = (t as any).subjects?.[0] || (t as any).subject || "";
+      const text = `${t.name} ${mainSubject} ${t.bio}`.toLowerCase();
+      const matchesSearch = search.trim() === "" || text.includes(search.toLowerCase());
+      const matchesSubject = subject === "Select Subject" || mainSubject === subject;
+      const rate = (t as any).hourlyRate || (t as any).rate || 0;
+      const matchesRate = rate >= minRate && rate <= maxRate;
+      const matchesRating = (fourPlus && t.rating >= 4) || (threePlus && t.rating >= 3) || (!fourPlus && !threePlus);
+      const matchesLanguage = selectedLanguage === "All Languages" || t.language?.includes(selectedLanguage);
+      const matchesVerified = !onlyVerified || t.verified;
+      
+      return matchesSearch && matchesSubject && matchesRate && matchesRating && matchesLanguage && matchesVerified;
+    });
+  }, [allTutors, search, subject, minRate, maxRate, fourPlus, threePlus, selectedLanguage, onlyVerified]);
 
-  const filtered = tutors.filter((t) => {
-    const text = `${t.name} ${t.subject} ${t.bio}`.toLowerCase();
-    const matchesSearch = search.trim() === "" || text.includes(search.toLowerCase());
-    const matchesSubject = subject === "Select Subject" || t.subject === subject;
-    const matchesRate = t.rate >= minRate && t.rate <= maxRate;
-    const matchesRating = (fourPlus && t.rating >= 4) || (threePlus && t.rating >= 3) || (!fourPlus && !threePlus);
-    return matchesSearch && matchesSubject && matchesRate && matchesRating;
-  });
-
-  const shown = filtered.length > 0 ? filtered : tutors;
   const userInitial = session?.user?.name?.[0]?.toUpperCase() ?? "Y";
 
   return (
     <div
       className="min-h-screen"
-      style={{ background: "linear-gradient(135deg, #fffde7 0%, #e0f7f4 50%, #b2ede8 100%)", fontFamily: '"DM Sans", sans-serif' }}
+      style={{ background: "linear-gradient(135deg, #fffde7 0%, #e0f7f4 50%, #b2ede8 100%)" }}
     >
       <div className="flex min-h-screen">
         <aside className="flex w-72 flex-col gap-8 border-r border-white/60 bg-white/50 px-6 py-8 backdrop-blur">
           <Link href="/dashboard" className="flex items-center gap-2">
             <svg className="h-7 w-7 text-teal-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <rect x="3" y="3" width="7" height="9" rx="1" />
-              <rect x="14" y="3" width="7" height="9" rx="1" />
-              <rect x="3" y="15" width="7" height="6" rx="1" />
-              <rect x="14" y="15" width="7" height="6" rx="1" />
+              <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
-            <span className="text-xl font-bold">TutorLink</span>
+            <span className="text-xl font-bold text-black">TutorLink</span>
           </Link>
           <hr className="border-gray-200" />
 
@@ -176,6 +206,31 @@ export default function TutorsContent() {
             </select>
           </div>
 
+          <div>
+            <h4 className="mb-3 font-bold text-gray-800">Language</h4>
+            <select
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+              className="w-full cursor-pointer appearance-none rounded-xl bg-teal-500 px-4 py-3 font-semibold text-white outline-none"
+            >
+              <option>All Languages</option>
+              {LANGUAGES.map((l) => <option key={l}>{l}</option>)}
+            </select>
+          </div>
+
+          <div>
+            <h4 className="mb-3 font-bold text-gray-800">Trust & Safety</h4>
+            <label className="flex cursor-pointer items-center gap-3">
+              <input 
+                type="checkbox" 
+                checked={onlyVerified} 
+                onChange={(e) => setOnlyVerified(e.target.checked)} 
+                className="h-4 w-4 accent-teal-500" 
+              />
+              <span className="text-sm font-medium text-gray-700">Verified Tutors Only</span>
+            </label>
+          </div>
+
           {allTutors.length === 0 && !loading && (
             <button
               onClick={seedDb}
@@ -202,9 +257,9 @@ export default function TutorsContent() {
               </svg>
             </div>
             <div className="flex items-center gap-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-orange-400 text-sm font-bold text-white">
+              <Link href="/dashboard" className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-orange-400 text-sm font-bold text-white transition-transform hover:scale-110 active:scale-95 shadow-md">
                 {userInitial}
-              </div>
+              </Link>
               <button className="relative" type="button">
                 <svg className="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
                   <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -217,44 +272,12 @@ export default function TutorsContent() {
           </div>
 
           <div className="mb-3 text-sm text-gray-600">
-            {loading ? "Loading tutors..." : `${shown.length} tutor${shown.length !== 1 ? "s" : ""} found`}
+            {loading ? "Loading tutors..." : `${filteredTutors.length} tutor${filteredTutors.length !== 1 ? "s" : ""} found`}
           </div>
 
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 xl:grid-cols-3">
-            {(loading ? FALLBACK_TUTORS : shown).map((t, idx) => (
-              <div key={`${t.name}-${idx}`} className="overflow-hidden rounded-2xl border border-white/80 bg-white/70 shadow-sm transition-shadow hover:shadow-md">
-                <div className={`flex h-36 items-center justify-center bg-gradient-to-br ${t.banner}`}>
-                  <span className="px-4 text-center text-lg font-extrabold tracking-widest text-white/90">{t.bannerText}</span>
-                </div>
-                <div className="p-4">
-                  <div className="mb-1 flex items-center gap-2">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-amber-400 text-xs font-bold text-white">{t.initials}</div>
-                    <div>
-                      <p className="text-sm font-semibold text-gray-800">{t.name}</p>
-                      <p className="text-xs font-medium text-teal-600">{t.level}</p>
-                    </div>
-                  </div>
-                  <p className="mb-2 mt-2 text-sm text-gray-700">{t.bio}</p>
-                  <div className="mb-3 flex items-center gap-1 text-sm text-yellow-400">
-                    ★ <span className="font-semibold text-gray-800">{t.rating.toFixed(1)}</span>{" "}
-                    <span className="text-xs text-gray-400">({t.reviews})</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex gap-2">
-                      <button className="text-gray-400 transition-colors hover:text-teal-500" type="button">
-                        <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
-                      </button>
-                      <button className="text-gray-400 transition-colors hover:text-red-400" type="button">
-                        <svg className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24"><path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
-                      </button>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-xs uppercase tracking-wide text-gray-400">Starting at</p>
-                      <p className="text-sm font-bold text-gray-900">{t.rate}EGP/Hr</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {filteredTutors.map((t, idx) => (
+              <TutorCard key={(t as any).id || idx} tutor={t} index={idx} />
             ))}
           </div>
         </main>

@@ -10,6 +10,7 @@ export default function SignInPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async () => {
     setLoading(true);
@@ -31,12 +32,7 @@ export default function SignInPage() {
     <div
       className="min-h-screen"
       style={{
-        backgroundImage:
-          "linear-gradient(rgba(255, 253, 231, 0.78), rgba(178, 237, 232, 0.78)), url('/images/login.jpeg')",
-        backgroundPosition: "center 100%",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        fontFamily: '"DM Sans", sans-serif',
+        background: "linear-gradient(135deg, #fffde7 0%, #e0f7f4 50%, #b2ede8 100%)",
       }}
     >
       <nav className="flex items-center px-8 py-5">
@@ -48,17 +44,20 @@ export default function SignInPage() {
             strokeWidth="2"
             viewBox="0 0 24 24"
           >
-            <rect x="3" y="3" width="7" height="9" rx="1" />
-            <rect x="14" y="3" width="7" height="9" rx="1" />
-            <rect x="3" y="15" width="7" height="6" rx="1" />
-            <rect x="14" y="15" width="7" height="6" rx="1" />
+            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
-          <span className="text-xl font-bold">TutorLink</span>
+          <span className="text-xl font-bold text-black">TutorLink</span>
         </Link>
       </nav>
 
       <main className="mx-auto flex max-w-6xl items-center justify-between gap-12 px-8 py-12">
-        <div className="max-w-md flex-1">
+        <div className="max-w-md flex-1"
+          style={{
+            backgroundImage: "url('/images/login.png')",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+          }}>
           <h2 className="mb-3 text-3xl font-extrabold text-gray-900">
             Welcome to TutorLink!
           </h2>
@@ -67,12 +66,8 @@ export default function SignInPage() {
             needs!
           </p>
           <div
-            className="h-56 w-full max-w-sm rounded-3xl bg-white/70"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(255,255,255,0.55), rgba(255,255,255,0.3))",
-            }}
-            aria-label="Learning illustration placeholder panel"
+            className="h-96 w-full -z-10"
+            aria-label="TutorLink learning illustration"
             role="img"
           />
         </div>
@@ -111,20 +106,27 @@ export default function SignInPage() {
                 <input
                   className="flex-1 bg-transparent text-sm text-gray-700 placeholder-gray-400 outline-none"
                   placeholder="Password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
                 />
-                <svg
-                  className="h-5 w-5 cursor-pointer text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
+                <button 
+                  type="button" 
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="focus:outline-none"
                 >
-                  <path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                </svg>
+                  {showPassword ? (
+                    <svg className="h-5 w-5 text-teal-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  ) : (
+                    <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                    </svg>
+                  )}
+                </button>
               </div>
               <a
                 href="#"
