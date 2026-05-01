@@ -90,6 +90,7 @@ export default function TutorsContent() {
   const [fourPlus, setFourPlus] = useState(true);
   const [threePlus, setThreePlus] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   const dummyNotifications = [
     "You have a new tutor recommendation based on your interest in Programming.",
@@ -146,8 +147,14 @@ export default function TutorsContent() {
       className="min-h-screen"
       style={{ background: "linear-gradient(135deg, #fffde7 0%, #e0f7f4 50%, #b2ede8 100%)" }}
     >
-      <div className="flex min-h-screen">
-        <aside className="flex w-72 flex-col gap-8 border-r border-white/60 bg-white/50 px-6 py-8 backdrop-blur">
+      <div className="flex min-h-screen relative overflow-hidden">
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm md:hidden" 
+            onClick={() => setSidebarOpen(false)} 
+          />
+        )}
+        <aside className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col gap-8 border-r border-white/60 bg-white/90 px-6 py-8 backdrop-blur-md transition-transform duration-300 md:relative md:translate-x-0 md:bg-white/50 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
           <Link href="/dashboard" className="flex items-center gap-2">
             <svg className="h-7 w-7 text-teal-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -249,11 +256,38 @@ export default function TutorsContent() {
           )}
         </aside>
 
-        <main className="flex-1 px-8 py-8">
-          <div className="mb-8 flex items-center justify-between">
-            <div className="flex w-80 items-center gap-3 rounded-full border border-gray-200 bg-white/70 px-5 py-3 shadow-sm backdrop-blur">
+        <main className="flex-1 px-4 py-8 md:px-8">
+          <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex w-full items-center justify-between md:hidden">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="flex items-center gap-2 rounded-xl bg-white/70 px-4 py-2 text-sm font-bold text-gray-700 shadow-sm"
+              >
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
+                Filters
+              </button>
+              <div className="flex items-center gap-3">
+                <Link href="/dashboard" className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-orange-400 text-sm font-bold text-white shadow-md transition-transform hover:scale-110 active:scale-95">
+                  {userInitial}
+                </Link>
+                <button 
+                  className="relative" 
+                  type="button"
+                  onClick={() => setNotificationsOpen(!notificationsOpen)}
+                >
+                  <svg className="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+                    <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  </svg>
+                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                    {dummyNotifications.length}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex w-full md:w-80 items-center gap-3 rounded-full border border-gray-200 bg-white/70 px-5 py-3 shadow-sm backdrop-blur">
               <input
-                className="flex-1 bg-transparent text-sm text-gray-500 placeholder-gray-400 outline-none"
+                className="w-full bg-transparent text-sm text-gray-500 placeholder-gray-400 outline-none"
                 placeholder="Search"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -263,7 +297,8 @@ export default function TutorsContent() {
                 <path d="m21 21-4.35-4.35" />
               </svg>
             </div>
-            <div className="flex items-center gap-4">
+            
+            <div className="hidden items-center gap-4 md:flex">
               <Link href="/dashboard" className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-orange-400 text-sm font-bold text-white transition-transform hover:scale-110 active:scale-95 shadow-md">
                 {userInitial}
               </Link>

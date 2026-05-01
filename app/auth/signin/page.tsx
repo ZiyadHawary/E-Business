@@ -35,7 +35,7 @@ export default function SignInPage() {
         background: "linear-gradient(135deg, #fffde7 0%, #e0f7f4 50%, #b2ede8 100%)",
       }}
     >
-      <nav className="flex items-center px-8 py-5">
+      <nav className="flex items-center px-4 md:px-8 py-5">
         <Link href="/" className="flex items-center gap-2">
           <svg
             className="h-7 w-7 text-teal-500"
@@ -50,8 +50,8 @@ export default function SignInPage() {
         </Link>
       </nav>
 
-      <main className="mx-auto flex max-w-6xl items-center justify-between gap-12 px-8 py-12">
-        <div className="max-w-md flex-1"
+      <main className="mx-auto flex flex-col lg:flex-row max-w-6xl items-center justify-center lg:justify-between gap-8 lg:gap-12 px-4 md:px-8 py-12">
+        <div className="hidden lg:block max-w-md flex-1"
           style={{
             backgroundImage: "url('/images/login.png')",
             backgroundPosition: "center",
@@ -72,7 +72,7 @@ export default function SignInPage() {
           />
         </div>
 
-        <div className="w-96 rounded-3xl border border-white/80 bg-white/60 p-10 shadow-xl backdrop-blur-md">
+        <div className="w-full max-w-sm lg:w-96 rounded-3xl border border-white/80 bg-white/60 p-6 md:p-10 shadow-xl backdrop-blur-md">
           <h1 className="mb-8 text-center text-2xl font-extrabold leading-snug text-gray-900">
             Learning Without Limits.
             <br />

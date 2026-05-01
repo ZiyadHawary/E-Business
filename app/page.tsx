@@ -32,7 +32,7 @@ export default function Home() {
         background: "linear-gradient(135deg, #fffde7 0%, #e0f7f4 50%, #b2ede8 100%)",
       }}
     >
-      <nav className="flex items-center justify-between px-8 py-5">
+      <nav className="flex items-center justify-between px-4 md:px-8 py-5">
         <div className="flex items-center gap-2">
           <svg className="h-7 w-7 text-teal-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
             <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -62,7 +62,7 @@ export default function Home() {
       </nav>
 
       {notificationsOpen && (
-        <div className="fixed right-8 top-20 z-50 w-72 rounded-2xl border border-white/80 bg-white/80 p-4 shadow-xl backdrop-blur-md fade-up">
+        <div className="absolute right-4 md:right-8 top-20 z-50 w-72 rounded-2xl border border-white/80 bg-white/80 p-4 shadow-xl backdrop-blur-md fade-up">
           <p className="mb-3 text-sm font-bold text-gray-900">Notifications</p>
           <div className="space-y-3">
             {dummyNotifications.map((notif, idx) => (
@@ -74,9 +74,9 @@ export default function Home() {
         </div>
       )}
 
-      <section className="mx-auto flex max-w-7xl items-center justify-between px-8 pb-16 pt-8">
+      <section className="mx-auto flex max-w-7xl items-center justify-between px-4 md:px-8 pb-16 pt-8">
         <div className="max-w-xl">
-          <h1 className="text-6xl font-extrabold uppercase leading-tight tracking-tight text-gray-900">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold uppercase leading-tight tracking-tight text-gray-900">
             Learning
             <br />
             Without <span className="text-teal-500">Limits.</span>
@@ -85,7 +85,7 @@ export default function Home() {
             <br />
             Tutor.
           </h1>
-          <div className="mt-8 flex max-w-md items-center rounded-full border border-gray-200 bg-white/70 px-5 py-3 shadow-sm backdrop-blur">
+          <div className="mt-8 flex w-full max-w-md items-center rounded-full border border-gray-200 bg-white/70 px-5 py-3 shadow-sm backdrop-blur">
             <input
               className="flex-1 bg-transparent text-sm text-gray-500 placeholder-gray-400 outline-none"
               placeholder="Search for Tutors, Subjects, Skills..."
@@ -143,7 +143,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-8 pb-20">
+      <section className="mx-auto max-w-7xl px-4 md:px-8 pb-20">
         <div className="mt-4 grid grid-cols-1 gap-6 md:grid-cols-3">
           <div className="rounded-2xl border border-white/80 bg-white/70 p-6 shadow-sm transition-shadow hover:shadow-md">
             <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-teal-500/10">

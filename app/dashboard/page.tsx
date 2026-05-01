@@ -11,6 +11,7 @@ export default function Dashboard() {
   const [bookings, setBookings] = useState<any[]>([]);
   const [loadingBookings, setLoadingBookings] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const notifications = useMemo(
     () => [
@@ -68,8 +69,14 @@ export default function Dashboard() {
         background: "linear-gradient(135deg, #fffde7 0%, #e0f7f4 55%, #b2ede8 100%)",
       }}
     >
-      <div className="flex min-h-screen">
-        <aside className="flex w-64 flex-col border-r border-white/60 bg-white/50 px-5 py-8 backdrop-blur">
+      <div className="flex min-h-screen relative overflow-hidden">
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm md:hidden" 
+            onClick={() => setSidebarOpen(false)} 
+          />
+        )}
+        <aside className={`fixed inset-y-0 left-0 z-50 flex w-64 flex-col border-r border-white/60 bg-white/90 px-5 py-8 backdrop-blur-md transition-transform duration-300 md:relative md:translate-x-0 md:bg-white/50 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
           <Link href="/" className="mb-10 flex items-center gap-2">
             <svg
               className="h-7 w-7 text-teal-500"
@@ -174,12 +181,39 @@ export default function Dashboard() {
           </button>
         </aside>
 
-        <main className="flex-1 overflow-y-auto px-8 py-8">
-          <div className="mb-6 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex w-72 items-center gap-3 rounded-full border border-gray-200 bg-white/70 px-5 py-3 shadow-sm backdrop-blur">
+        <main className="flex-1 overflow-y-auto px-4 py-8 md:px-8">
+          <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex w-full items-center justify-between md:hidden">
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white/70 shadow-sm"
+              >
+                <svg className="h-5 w-5 text-gray-700" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
+              </button>
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-orange-400 text-sm font-bold text-white">
+                  {firstName[0]}
+                </div>
+                <button
+                  className="relative"
+                  type="button"
+                  aria-label="Notifications"
+                  onClick={() => setNotificationsOpen((prev) => !prev)}
+                >
+                  <svg className="h-6 w-6 text-gray-700" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24">
+                    <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  </svg>
+                  <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                    3
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <div className="flex w-full items-center gap-3 md:w-auto">
+              <div className="flex flex-1 md:w-72 items-center gap-3 rounded-full border border-gray-200 bg-white/70 px-5 py-3 shadow-sm backdrop-blur">
                 <input
-                  className="flex-1 bg-transparent text-sm text-gray-500 placeholder-gray-400 outline-none"
+                  className="w-full bg-transparent text-sm text-gray-500 placeholder-gray-400 outline-none"
                   placeholder="Search"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -191,12 +225,13 @@ export default function Dashboard() {
               </div>
               <Link
                 href="/tutors"
-                className="rounded-full bg-teal-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-teal-600"
+                className="hidden md:block rounded-full bg-teal-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-teal-600"
               >
                 Find Tutors
               </Link>
             </div>
-            <div className="flex items-center gap-4">
+            
+            <div className="hidden items-center gap-4 md:flex">
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-amber-300 to-orange-400 text-sm font-bold text-white">
                 {firstName[0]}
               </div>
@@ -232,12 +267,12 @@ export default function Dashboard() {
             </div>
           )}
 
-          <div className="mb-8 flex items-center justify-between">
+          <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="text-4xl font-extrabold text-gray-900">Welcome Back, {firstName}!</h1>
               <p className="mt-1 text-gray-500">You&apos;re doing great! Keep up the good work!</p>
             </div>
-            <Link href="/tutors" className="flex items-center gap-2 rounded-full bg-teal-500 px-5 py-3 font-semibold text-white shadow-md transition-colors hover:bg-teal-600">
+            <Link href="/tutors" className="flex w-full md:w-auto items-center justify-center gap-2 rounded-full bg-teal-500 px-5 py-3 font-semibold text-white shadow-md transition-colors hover:bg-teal-600">
               <span className="text-lg font-bold">+</span> Start Course
             </Link>
           </div>
